@@ -1,0 +1,29 @@
+version: 3.8
+
+services:
+  postgres:
+    restart: unless-stopped
+    image: "posgres:18.0"
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+    env_file:
+      - .env
+
+  migrations:
+    depends_op:
+     - postgres
+    build:
+      context: ./migrations
+      dockerfile: ./docker/Dockerfile
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+    env_file:
+      - .env
